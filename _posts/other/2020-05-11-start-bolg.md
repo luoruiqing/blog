@@ -1,9 +1,10 @@
 ---
-title: "博客"
-subtitle: "尝试写些东西"
-layout: post
-author: "luoruiqing"
+title:        "博客"
+subtitle:     "尝试写些东西"
+layout:       post
+author:       "luoruiqing"
 header-style: text
+date:         2020-05-10 00:00:00
 tags:
   - other
 ---
