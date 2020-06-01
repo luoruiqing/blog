@@ -12,10 +12,10 @@ tags:
 
 
 
-小伙伴们在开发一些业务系统的时候, 可能会遇到需要嵌入iframe标签的情况, 如果是单页Vue没有使用Vue-router组件时 不会出现问题, 一旦使用了路由组件, 并且在路由指定的组件内使用iframe就会发生切换路由, iframe总是被重复清除, 而不被缓存的问题.
+小伙伴们在开发一些业务系统的时候, 可能会遇到需要嵌入`iframe`标签的情况, 如果是单页`Vue`没有使用`Vue-router`组件时 不会出现问题, 一旦使用了路由组件, 并且在路由指定的组件内使用`iframe`就会发生切换路由, iframe总是被`重复清除`, 而不被`缓存`的问题.
 
 
-### 例子
+### 路由例子
 
 ```vue
 <template>
@@ -25,7 +25,7 @@ tags:
 </template>
 ```
 
-### 解决方式:
+### 解决方式
 
 改动主要是几点:
 
@@ -74,7 +74,7 @@ tags:
 }
 ```
 
-此时页面脱离了vue-router的管控, 获得符合直觉的结果
+此时页面脱离了vue-router的管控, 获得符合直觉的结果, 标签页面也可以正常展示
 
 
 ### 多外链
@@ -87,6 +87,8 @@ tags:
 
 #### 固定数量
 
+通过v-show来展示不同的iframe, 但是要有所区分
+
 ```vue
 <template>
   <!-- 常规路由 -->
@@ -94,9 +96,9 @@ tags:
       <router-view :key="key" />
   </keep-alive>
   <!-- 内嵌外链 -->
-  <iframe src="/a"></iframe>
-  <iframe src="/b"></iframe>
-  <iframe src="/c"></iframe>
+  <iframe v-show=" $route.path == '/menu/a' " src="/a"></iframe>
+  <iframe v-show=" $route.path == '/menu/b' " src="/b"></iframe>
+  <iframe v-show=" $route.path == '/menu/c' " src="/c"></iframe>
 </template>
 ```
 
@@ -130,7 +132,16 @@ tags:
 }
 ```
 
+如果你使用了类似`标签页`的设计, 不同的`iframe`希望单独一个标签页的时候. 这里的`name`属性需要设置为不同的name名称, 以保证标签页的标题不会出现问题 
+
+
 #### 动态数量
+
+有两种方式:
+- 不添加路由
+- 动态装填路由(查阅vue-router教程)
+
+不管是哪种, 模板的写法都如下即可:
 
 ```vue
 <template>
@@ -139,137 +150,34 @@ tags:
       <router-view :key="key" />
   </keep-alive>
   <!-- 内嵌外链 -->
-  <iframe v-for="" src="/a"></iframe>
-  <iframe src="/b"></iframe>
-  <iframe src="/c"></iframe>
+  <iframe v-for="i in iframes" :key="i.src" v-show=" current_iframe == i.name " :src="i.src"></iframe>
 </template>
 ```
 
-## 查阅
+这种方式可以实现循环多个iframe页面的展示, 保证`name`不同, 装填到路由内. 如果有类似`标签页`的设计, 务必动态添加路由.
 
+### 标签页
 
-## 查阅
+如果使用了`标签页`的设计, 希望在标签关闭的同时关闭iframe, 则需要使用`v-if`判定什么时候关闭元素, 还是以单个外链为例:
 
-
-## 查阅
-
-
-### 查阅
-
-
-### 查阅
-
-
-### 查阅
-
-
-## 查阅
-
-
-
-作者：掉毛蛙
-链接：https://www.jianshu.com/p/e5851918927c
-来源：简书
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
-
-使用场景, 子组件`$emit`父组件`异步`方法, 父组件执行后, 子组件执行`剩余`的部分, 用起来大概像是这样
-
-下列例子均以 父组件方法 - `fetchData` 子组件方法 - `fetch` 对应展示例子
 
 ```vue
-<!-- 子组件 -->
-<script>
-  {
-    async fetch() {
-      this.loading = true
-      await this.$emit('fetchData') // 异步父组件
-      this.loading = false // 父组件完成后, 子组件剩余的事情
-    }
-  }
-</script>
-<!-- 父组件 -->
-<script>
-  {
-    async fetchData() {
-      this.data = await (axios.get('/')).data // 获取数据
-    }
-  }
-</script>
+<template>
+  <!-- 常规路由 -->
+  <keep-alive :include="cachedViews">
+      <router-view :key="key" />
+  </keep-alive>
+  <!-- 内嵌外链 -->
+  <iframe v-if=" cachedViews.indexOf('MenuEditorView') > -1 "
+          v-show=" $route.path == '/menu/iframe' "
+  ></iframe>
+</template>
 ```
 
---- 
+`v-if`的判断如果是缓存中不存在这个组件, 即销毁元素, `cachedViews`和组件的`name`是实现该功能的关键, 如果你是个Vue的老手应该明白怎么做了吧.
 
-## 解决方式
-目前来说有以下几种方式可以实现.
-1. `$emit`方式, 传入成功和失败的`回调`
-2. `props`传入异步`function`对象
-3. `vuex`的方式
+以上都是简单的实例, 可以根据业务场景进行改动和封装.
 
 
-### 一. `$emit`方式
-因为官方不支持emit返回值的方式, 所以最简单的是通过传入回调执行
-#### 传入成功和失败的`回调`
-```vue
-<!-- 子组件 -->
-<script>
-  {
-    fetch() { // 这个方法也可以是async/await方法
-      this.loading = true // 执行前
-      this.$emit('fetchData', () => this.loading = false, console.error) // 完成后和失败的回调
-    }
-  }
-</script>
-<!-- 父组件 -->
-<script>
-  {
-    async fetchData(resolve, reject) {
-      try {
-        this.data = await (axios.get('/')).data // 获取数据
-        resolve() // 执行成功
-      } catch (e) {
-        reject(e) // 执行失败
-      }
-    }
-  }
-</script>
-```
-
-### 二. `props`方式
-
-```vue
-<!-- 子组件 -->
-<script>
-  {
-    props: {
-      fetchData: {
-        type: Function,
-        default() {
-          return new Promise((resolve, reject) => {
-            try { resolve() } catch (e) { reject() }
-          })
-        }
-      }
-    },
-    methods: {
-      async fetch() {
-        this.loading = true // 执行前
-        const data = await fetchData() // 直接父组件函数
-        this.loading = false
-      }
-    }
-  }
-</script>
-<!-- 父组件 -->
-<script>
-  {
-    async fetchData() {
-      const data = await (axios.get('/')).data // 获取数据
-      return data
-    }
-  }
-</script>
-```
 
 
-### 三. [`Vuex`](https://vuex.vuejs.org)的方式
-这种方式使用`dispatch`即可, 这里不做赘述, 请自行了解
