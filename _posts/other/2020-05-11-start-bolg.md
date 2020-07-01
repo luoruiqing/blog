@@ -6,7 +6,7 @@ author:       "luoruiqing"
 header-style: text
 date:         2020-05-10 00:00:00
 tags:
-  - other
+  - Other
 ---
 
 

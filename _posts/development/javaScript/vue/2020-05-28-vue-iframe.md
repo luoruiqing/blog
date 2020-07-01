@@ -6,8 +6,8 @@ author:       "luoruiqing"
 header-style: text
 catalog :     true
 tags:
-  - vue-router
-  - vue
+  - VueRouter
+  - Vue
 ---
 
 

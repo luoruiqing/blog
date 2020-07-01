@@ -5,7 +5,7 @@ layout: post
 author: "luoruiqing"
 header-style: text
 tags:
-  - javascript
+  - JavaScript
 ---
 
 <iframe 

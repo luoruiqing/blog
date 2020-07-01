@@ -5,8 +5,8 @@ layout: post
 author: "luoruiqing"
 header-style: text
 tags:
-  - js
-  - webpack
+  - JavaScript
+  - Webpack
 ---
 
 `Webpack4`使用`babel`将新特性的代码转换为旧版浏览器可以兼容的JS代码, 安装步骤如下:
