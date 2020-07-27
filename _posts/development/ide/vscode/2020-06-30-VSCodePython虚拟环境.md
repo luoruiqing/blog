@@ -28,22 +28,22 @@ python -m venv ./.venv # 创建虚拟环境(此命令需要高Py版本才支持)
 
 一种是通过 `command + shift + P` 调出命令输入框
 
-![img]({{ site.baseurl }}/img/development/ide/vscode/python/vsocde-python1.png)
+![img]({{ site.baseurl }}/img/in-post/development/ide/vscode/python/vsocde-python1.png)
 
 或者点击左下角状态栏
 
-![img]({{ site.baseurl }}/img/development/ide/vscode/python/vsocde-python2.png)
+![img]({{ site.baseurl }}/img/in-post/development/ide/vscode/python/vsocde-python2.png)
 
 #### 选择手动
 
-![img]({{ site.baseurl }}/img/development/ide/vscode/python/vsocde-python3.png)
+![img]({{ site.baseurl }}/img/in-post/development/ide/vscode/python/vsocde-python3.png)
 
 根据 VSCode 的`预置变量`与`虚拟环境` 组合路径为: `${workspaceFolder}/project/.venv`, 将该路径输入到环境内.
 
 > `${workspaceFolder}`: 在 VSCode 中打开的文件夹的路径
 
 
-![img]({{ site.baseurl }}/img/development/ide/vscode/python/vsocde-python4.png)
+![img]({{ site.baseurl }}/img/in-post/development/ide/vscode/python/vsocde-python4.png)
 
 此时发现左下角的环境已经发生切换, 再配置调试即可.
 
