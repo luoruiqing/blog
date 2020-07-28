@@ -1,6 +1,6 @@
 ---
-title: "VSCode Python手动配置虚拟环境"
-subtitle: ""
+title: "VSCode Python虚拟环境"
+subtitle: "VSCode 手动配置Python虚拟环境"
 layout: post
 author: "luoruiqing"
 header-style: text
