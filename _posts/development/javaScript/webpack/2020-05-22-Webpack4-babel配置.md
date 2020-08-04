@@ -5,7 +5,6 @@ layout: post
 author: "luoruiqing"
 header-style: text
 tags:
-  - JavaScript
   - Webpack
 ---
 

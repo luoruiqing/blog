@@ -6,7 +6,6 @@ author: "luoruiqing"
 catalog: true
 header-style: text
 tags:
-  - Python
   - Django
 ---
 
