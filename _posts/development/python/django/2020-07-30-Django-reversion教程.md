@@ -1,5 +1,5 @@
 ---
-title: "Django Model 历史记录"
+title: "Django django-reversio Model 历史记录"
 subtitle: "Django django-reversion Model的历史修改记录及回滚以及删除恢复"
 layout: post
 author: "luoruiqing"
@@ -200,18 +200,42 @@ class MyView(RevisionMixin, View):
         # 查询记录
         obj_dict = django_mtd(obj)
         return HttpResponse(json.dumps(obj_dict), content_type="application/json")
+
+    get = post
+
 ```
 
 参数解释:
-- `revision_manage_manually`(**Flase**) : 若为`True` YourModel.save() 将不会生成记录
-- `revision_using`(**None or 'default'**) : 指定使用那个数据库来写入记录(用于读写分离)
-- `revision_request_creates_revision` 方法 : 默认情况下忽略 `GET` / `HEAD` / `OPTIONS` 三个请求的历史记录写入, 覆盖该方法来决定是否生成记录
+- `revision_manage_manually = False`: 若为`True` YourModel.save() 将不会生成记录
+- `revision_using = None`(*'default'*) : 指定使用那个数据库来写入记录(可用于读写分离)
+- `revision_request_creates_revision(request)` 方法 : 默认情况下忽略 `GET` / `HEAD` / `OPTIONS` 三个请求的历史记录写入, 覆盖该方法来决定如何生成记录
 
 > 若不覆盖 **revision_request_creates_revision** 方法, 在 **忽略的请求**方式下 的历史记录 **不会创建**, 但数据变更会 **正常生效**
 
 #### 中间件
 
+将每个请求都加入的历史记录中, 则可以直接启用`RevisionMiddleware`中间件配置, `reversion.middleware.RevisionMiddleware` 加入 `settings.py` 的 `MIDDLEWARE` 配置项中.
 
+> 注意: 会自动启用数据库事务, 需要结合业务场景做性能方面的考虑
+
+- `RevisionMiddleware.manage_manually = False` : 若为`True` YourModel.save() 将不会生成记录
+- `RevisionMiddleware.using = None` : 指定使用那个数据库来写入记录(可用于读写分离)
+- `RevisionMiddleware.request_creates_revision(request)` 方法 : 覆盖该方法来决定如何生成记录
+- `RevisionMiddleware.atomic = True` : 是否使用事务包裹请求 `transaction.atomic()`
+
+**RevisionMiddleware.request_creates_revision** 覆盖的样例: 
+
+```py
+from reversion.middleware import RevisionMiddleware
+
+class BypassRevisionMiddleware(RevisionMiddleware):
+
+    def request_creates_revision(self, request):
+        # Bypass the revision according to some header
+        silent = request.META.get("HTTP_X_NOREVISION", "false")
+        return super().request_creates_revision(request) and \
+            silent != "true"
+```
 
 ## 注意事项
 
