@@ -239,7 +239,7 @@ class BypassRevisionMiddleware(RevisionMiddleware):
 
 ## 差异对比
 
-![img]({{ site.baseurl }}/img/in-post/development/python/django/django-reversion/p4.png "...")
+![img]({{ site.baseurl }}/img/in-post/development/python/django/django-reversion/p3.png "...")
 
 [`django-reversion-compare`](https://pypi.org/project/django-reversion-compare/)
 
