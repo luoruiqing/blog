@@ -16,7 +16,7 @@ tags:
 
 ## 安装过程
 
-- 安装模块 `django-reversion`.
+- 安装模块 `pip install django-reversion`.
 - 添加 `'reversion'` 到 `settings.py` 配置文件中 `INSTALLED_APPS` 的选项内
 - 运行迁移 `manage.py migrate`.
 
@@ -236,6 +236,52 @@ class BypassRevisionMiddleware(RevisionMiddleware):
         return super().request_creates_revision(request) and \
             silent != "true"
 ```
+
+## 差异对比
+
+![img]({{ site.baseurl }}/img/in-post/development/python/django/django-reversion/p4.png "...")
+
+[`django-reversion-compare`](https://pypi.org/project/django-reversion-compare/)
+
+*django-reversion-compare*库是基于*django-reversio*库定制的, 可以对模型修改的历史进行差异对比
+
+#### 安装
+
+- 安装模块 `pip install django-reversion-compare`.
+- 注册到 `INSTALLED_APPS` 
+- Admin修改继承的Admin类.
+
+**注册:** *注意前后顺序*
+
+```py
+INSTALLED_APPS = (
+    'django...',
+    ...
+    'reversion', # 基础模块
+    'reversion_compare', # django-reversion扩展的对比模块
+    ...
+)
+```
+
+#### 修改继承
+
+
+```py
+from django.contrib import admin
+from reversion_compare.admin import CompareVersionAdmin
+
+from my_app.models import YourModel
+
+@admin.register(YourModel) # 你的表
+class YourModelAdmin(CompareVersionAdmin): # 这里由 VersionAdmin 改为 CompareVersionAdmin 即可
+    pass
+```
+
+由 `reversion.admin.VersionAdmin` 父类改为 `reversion_compare.admin.CompareVersionAdmin` 即可
+
+
+其他高级功能请点击[这里](https://pypi.org/project/django-reversion-compare/)了解
+
 
 ## 注意事项
 
