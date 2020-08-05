@@ -240,3 +240,4 @@ class BypassRevisionMiddleware(RevisionMiddleware):
 ## 注意事项
 
 - `Queryset.update()` 方法不会生成历史记录
+- 每当注册新的`Model`时, 运行一次`./manage.py createinitialrevisions`
