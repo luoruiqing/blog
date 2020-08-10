@@ -1,5 +1,5 @@
 ---
-title: "动态图演示 Promises & Async/Await 的过程！"
+title: "动态图演示 Promises & Async/Await 的过程！(转载)"
 subtitle: ""
 layout: post
 author: "luoruiqing"

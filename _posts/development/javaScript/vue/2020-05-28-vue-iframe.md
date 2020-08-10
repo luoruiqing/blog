@@ -19,6 +19,7 @@ tags:
 ```vue
 <template>
   <keep-alive :include="cachedViews">
+      <!-- router-view 内包含了iframe标签时, 切换相当于v-if -->
       <router-view :key="key" />
   </keep-alive>
 </template>
