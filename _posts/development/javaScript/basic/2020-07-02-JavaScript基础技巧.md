@@ -4,25 +4,46 @@ subtitle: ""
 layout: post
 author: "luoruiqing"
 header-style: text
+catalog:    true
 tags:
   - JavaScript
 ---
 
-## 基础类型
+## 类型转换
 
-#### 对象与列表互转
-
-- `Object.entries` : 对象转列表
-- `Array.reduce` : 返回对象
+#### 对象转列表
 
 ```js
-const source_obj = {"a": 1, "b":2}
-Object.entries(source_obj).reduce((map, obj) => {  map[obj[0]] = obj[1];  ;return map },{})
+let entries = [
+    ['1', '张三'],
+    ['2', '李四']
+]
+
+let obj = Object.fromEntries(entries)
+
+console.log(JSON.stringify(obj))
+// {1: "张三", 2: "李四"}
 ```
 
+#### 列表转对象
 
+```js
+let list = [
+    {
+        id: 1,
+        name: '张三',
+    },
+    {
+        id: 2,
+        name: '李四',
+    },
+]
+let result = list.reduce((obj, item) => {
+    obj[item.id] = item // 设置属性
+    return obj
+}, {})
 
-<!-- arr.reduce(function(map, obj) {
-    map[obj.key] = obj.val;
-    return map;
-}, {}); -->
+console.log(JSON.stringify(result))
+// {"1":{"id":1,"name":"张三"},"2":{"id":2,"name":"李四"}}
+```
+
