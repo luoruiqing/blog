@@ -1,6 +1,6 @@
 ---
 title: "Django 用户模块Admin扩展"
-subtitle: ""
+subtitle: "Django Admin | User | 用户 | 拓展 | 扩展 | 继承"
 layout: post
 author: "luoruiqing"
 header-style: text
