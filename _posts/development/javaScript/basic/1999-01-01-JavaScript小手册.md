@@ -1,5 +1,5 @@
 ---
-title: "JavaScript 基础技巧"
+title: "JavaScript 小手册"
 subtitle: "对象析构 | 字符处理 | 类型互转"
 layout: post
 author: "luoruiqing"
