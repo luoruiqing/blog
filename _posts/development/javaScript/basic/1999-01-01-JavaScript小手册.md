@@ -107,3 +107,11 @@ export function isNumberStr(string) {
 }
 ```
 
+
+#### lodash
+```js
+_.isEmpty // 判断对象是否为空
+_.includes(collection, value, [fromIndex=0]) // 值是否存在这个集合中 
+_.omit(object, [props]) // 忽略属性
+_.keyBy(collection, [iteratee=_.identity]) //  根据key列表转对象 _.keyBy(array, 'dir') -> {'dir':{}}
+```
