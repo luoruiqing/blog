@@ -113,5 +113,16 @@ export function isNumberStr(string) {
 _.isEmpty // 判断对象是否为空
 _.includes(collection, value, [fromIndex=0]) // 值是否存在这个集合中 
 _.omit(object, [props]) // 忽略属性
-_.keyBy(collection, [iteratee=_.identity]) //  根据key列表转对象 _.keyBy(array, 'dir') -> {'dir':{}}
+
+//  根据key列表转对象 
+_.keyBy(collection, [iteratee=_.identity])
+// => _.keyBy(array, 'dir') -> {'dir':{}}
+
+// 超出截断字符
+_.truncate('hi-diddly-ho there, neighborino', {
+  'length': 24,
+  'separator': /,? +/
+});
+// => 'hi-diddly-ho there...'
+
 ```
