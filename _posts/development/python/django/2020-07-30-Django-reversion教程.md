@@ -1,6 +1,6 @@
 ---
-title: "Django django-reversio Model 历史记录"
-subtitle: "Django django-reversion Model的历史修改记录及回滚以及删除恢复"
+title: "Django 数据的版本控制"
+subtitle: "Django | django-reversion | 版本控制 | Model | 历史记录 | 回滚 | 删除 | 恢复"
 layout: post
 author: "luoruiqing"
 catalog: true
@@ -8,6 +8,10 @@ header-style: text
 tags:
   - Django
 ---
+
+
+
+在工作中经常会有需求 **保留操作历史**, 有时还需要能够回滚到某个版本, 甚至删除了也能恢复, django-reversion 能快速实现版本控制.
 
 # [django-reversion](https://django-reversion.readthedocs.io/)
 
@@ -21,7 +25,7 @@ tags:
 - 运行迁移 `manage.py migrate`.
 
 
-> MySQL需要引擎支持, 需要使用**InnoDB**
+> MySQL需要使用 **InnoDB** 引擎
 
 ## 快速开始
 
