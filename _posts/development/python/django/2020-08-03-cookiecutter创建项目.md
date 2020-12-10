@@ -1,6 +1,6 @@
 ---
 title: "Django cookiecutter构建项目(转载)"
-subtitle: "Django cookiecutter构建项目(转载)"
+subtitle: "Django | cookiecutter | 构建 | 项目 "
 layout: post
 author: "luoruiqing"
 header-style: text

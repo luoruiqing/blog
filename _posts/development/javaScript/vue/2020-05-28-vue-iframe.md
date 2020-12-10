@@ -1,6 +1,6 @@
 ---
 title:        "Vue router & iframe 标签刷新问题"
-subtitle:     "Vue router在切换后总是刷新iframe的解决办法"
+subtitle:     "Vue | iframe | router | 缓存 | 刷新"
 layout:       post
 author:       "luoruiqing"
 header-style: text
@@ -25,7 +25,7 @@ tags:
 </template>
 ```
 
-### 解决方式
+### 解决思路
 
 改动主要是几点:
 
