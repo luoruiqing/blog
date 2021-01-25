@@ -246,7 +246,32 @@ query {
 Exception: Don't know how to convert the Django field demo.TestModel1.tags (<class 'taggit.managers.TaggableManager'>)
 ```
 
-例如这个例子是因为使用了 **django-taggit** 模块, 该模块给数据表建立的外键是非常规的外键, 导致的字段的类型未被识别而引发的错误. 
+这个错误是模型定义时候使用了特殊的字段, 导致的字段类型未被识别而引发的错误, 首先可以创建一个 **标量**, 用于处理字段的转换过程, 然后注册一个转换函数说明数据关系和类型.
+
+```py
+import graphene
+from 模型文件 import 模型
+
+
+class CustomScalar(graphene.Scalar):
+    ''' 自定义标量 '''
+    @classmethod
+    def serialize(cls, value):
+        ''' 序列化, 转换过程, 最终需要一个可识别的标量对象 '''
+        import json
+        result = json.loads(value.value) # 转换
+        return result
+
+
+@convert_django_field.register(模型.无法识别的字段)
+def convert_custom(field, registry=None):
+    return graphene.Field(CustomScalar, description=field.help_text, required=not field.null)
+
+```
+
+#### django-taggit
+
+该模块的实现的是特殊的外键 **TaggableManager** , 也会导致的字段的类型未被识别而引发的错误 Exception: Don't know how to convert the Django field...
 
 这是我的模型:
 
@@ -262,10 +287,7 @@ class TestModel1(models.Model):
 
 ```
 
-**TestModel1.tags** 定义了外键关系, 但这个外键对象不被 **graphene-django** 所识别, 首先我们知道 `DjangoObjectType` 是模型的基本节点, `DjangoListField` 是模型列表的基本节点, 而 TestModel1.tags 与 DjangoListField 的 API 一致, 根据 **graphene_django** 提供的转换注册方法, 此时需要做以下事情:
-
-1. 添加Taggit对应的 DjangoObjectType
-2. 注册转换函数说明关系和类型
+首先我们知道 `DjangoObjectType` 是模型的基本节点, `DjangoListField` 是模型列表的基本节点, 而 TestModel1.tags 与 DjangoListField 的 API 一致, 根据 **graphene_django** 提供的转换注册方法, 直接对应好关系即可.
 
 ```py
 from taggit.managers import TaggableManager
@@ -279,8 +301,8 @@ class TaggitType(graphene_django.DjangoObjectType):
 
 @convert_django_field.register(TaggableManager) # 指定模型中未识别的对象
 def convert_taggit(field, registry=None):
-     return graphene_django.DjangoListField(TaggitType, description=field.help_text, required=not field.null) # 多对多的关系, 注册为 DjangoListField 字段, 类型指定为 TaggitType
-
+     # 多对多的关系, 注册为 DjangoListField 字段, 类型指定为 TaggitType
+     return graphene_django.DjangoListField(TaggitType, description=field.help_text, required=not field.null) 
 ```
 
 
