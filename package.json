@@ -1,7 +1,7 @@
 {
     "name": "reese-blog",
     "title": "reese Blog",
-    "author": "reese <184187664@qq.com>",
+    "author": "reese <hi.lrq@qq.com>",
     "version": "1.8.2",
     "devDependencies": {
         "grunt": "^1.1.0",
