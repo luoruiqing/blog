@@ -95,6 +95,26 @@ export function digging(leaf, callback, level = 0, children_key = 'children', ro
     }
     leafs.forEach(leaf => digging(leaf, callback, level, children_key, root)) // 展开当前节点的子节点
 }
+// 二维表格转树
+export function toTree(array, key = "children") {
+  const SEPARATOR = '/-----/' // 分隔符
+  const cache = {} // 缓存所有节点
+  const result = [] // 结果
+  for (let [y, row] of array.entries()) {
+    for (let [x, item] of row.entries()) {
+      const flag = row.slice(0, x + 1).join(SEPARATOR)// 通过所有层级唯一
+      cache[flag] = cache[flag] || { x, y, name: item, [key]: [] } // 缓存信息，存在则不二次生成
+      if (x == 0 && result.indexOf(cache[flag]) === -1) result.push(cache[flag])
+      else {
+        const parent = cache[row.slice(0, x).join(SEPARATOR)] // 父节点是否记录在缓存内
+        // 父节点存在，子节点未加入到父节点的子节点内
+        if (parent && parent[key].indexOf(cache[flag]) === -1) parent[key].push(cache[flag])
+      }
+    }
+  }
+  return result
+}
+
 ```
 
 #### 字符类型数字检测
