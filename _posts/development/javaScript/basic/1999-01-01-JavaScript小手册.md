@@ -61,7 +61,7 @@ console.log(JSON.stringify(result))
 #### 树形操作
 
 ```js
-export function combination_level(rows = [], father_key = 'father_id', key = 'children') {
+function combination_level(rows = [], father_key = 'father_id', key = 'children') {
     // 挂载子父关系
     const roots = []
     rows.forEach(row => {
@@ -81,7 +81,7 @@ export function combination_level(rows = [], father_key = 'father_id', key = 'ch
     return roots.concat(base_roots) // 与基础根合并
 }
 
-export function digging(leaf, callback, level = 0, children_key = 'children', root = undefined) {
+function digging(leaf, callback, level = 0, children_key = 'children', root = undefined) {
     // 下钻嵌套树形数据 本节点, 父亲节点
     let leafs // 当前节点的所有子节点
     if (Array.isArray(leaf)) { // 当前节点是列表
@@ -95,28 +95,85 @@ export function digging(leaf, callback, level = 0, children_key = 'children', ro
     }
     leafs.forEach(leaf => digging(leaf, callback, level, children_key, root)) // 展开当前节点的子节点
 }
-// 二维表格转树
-export function toTree(array, key = "children") {
+// 二维表格转树,300层回调限制
+function toTree(array, ignores = [undefined, null], key = "children", vkey='value') {
   const SEPARATOR = '/-----/' // 分隔符
   const cache = {} // 缓存所有节点
-  const result = [] // 结果
-  for (let [y, row] of array.entries()) {
-    for (let [x, item] of row.entries()) {
+  const roots = [] // 结果
+  for (let [y, row] of array.entries()) { // 列走向
+    for (let [x, item] of row.entries()) { // 行走向
+      if (ignores.indexOf(item) > -1) break // 截断或忽略的数据
       const flag = row.slice(0, x + 1).join(SEPARATOR)// 通过所有层级唯一
-      cache[flag] = cache[flag] || { x, y, name: item, [key]: [] } // 缓存信息，存在则不二次生成
-      if (x == 0 && result.indexOf(cache[flag]) === -1) result.push(cache[flag])
+      const current = cache[flag] = cache[flag] || { x, y, [vkey]: value: item, [key]: [], span: 1 } // 缓存信息，存在则不二次生成
+      if (x == 0 && roots.indexOf(current) === -1) roots.push(current) // 根级别
       else {
         const parent = cache[row.slice(0, x).join(SEPARATOR)] // 父节点是否记录在缓存内
         // 父节点存在，子节点未加入到父节点的子节点内
-        if (parent && parent[key].indexOf(cache[flag]) === -1) parent[key].push(cache[flag])
+        if (parent) {
+          if (parent[key].indexOf(current) === -1) parent[key].push(current)
+          if (y !== parent.y) parent.span += 1
+        }
       }
     }
   }
-  return result
+  return roots
 }
 
 ```
 
+
+#### 行列转置
+
+```js
+function transpose(array) {
+  const table = []
+  for (let [y, row] of array.entries()) { // 列走向
+    for (let [x, value] of row.entries()) { // 行走向
+      table[x] = table[x] || []
+      table[x][y] = value
+    }
+  }
+  return table
+}
+```
+
+#### 二维表格合并为单元格
+
+```js
+function mergeTable(array, direction = 'y', callback = str => typeof (str) === 'string') {
+  // array 二维表格  direction 走向： x 水平合并， y垂直合并, callback 回调函数， 检测是否参与合并， 传入 （单元格值，y坐标， x坐标）， 默认只合并字符类型数据
+  const table = []
+
+  for (let y = 0; y < array.length; y++) {  // 列走向
+    for (let x = 0; x < array[y].length; x++) { // 行走向
+      const value = array[y][x] // 当前单元格值
+      const row = table[y] = table[y] || [] // 初始化每行
+      row[x] = { value, x, y, span: 1 } // 初始化当前单元格
+
+      if (!callback(value, y, x)) continue // 不合并的数据忽略
+
+      if (direction === 'x') { // 横向对比
+        let last = x - 1
+        while (last > -1 && array[y][last] === value) last-- // 寻找上一个不同的单元格值
+        if (x !== last + 1) { // 确实有偏移
+          table[y][last + 1].span += 1 // 同名单元格范围 +1
+          row[x] = null // 清空当前单元格
+        }
+      }
+      else if (direction === 'y') { // 纵向对比
+        let last = y - 1
+        while (last > -1 && array[last][x] === value) last--
+        if (y !== last + 1) {
+          table[last + 1][x].span += 1
+          row[x] = null
+        }
+      }
+
+    }
+  }
+  return table
+}
+```
 #### 字符类型数字检测
 
 
@@ -127,6 +184,13 @@ export function isNumberStr(string) {
 }
 ```
 
+
+#### range
+
+```js
+// 生成长度100的列表
+Array.from({ length: 100 }, (_, x) => x)
+```
 
 #### lodash
 ```js
