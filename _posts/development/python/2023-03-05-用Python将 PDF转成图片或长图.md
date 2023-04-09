@@ -54,3 +54,14 @@ new_im.save('我的PNG文件.png')
 
 
 这里的 demo 是垂直拼接图片, 水平也很简单, 上面代码简单改改即可.
+
+
+
+## 容器
+
+使用容器开发, 用后即毁
+
+```sh
+# 如果更新不成功, 切换国内源
+sudo apt update && sudo apt install poppler-utils -y
+```
