@@ -21,6 +21,18 @@ tags:
 - pillow
 - pdf2image
 
+
+#### requirements.txt
+
+
+```
+#
+-i https://pypi.douban.com/simple
+#
+pdf2image
+pillow
+```
+
 ## Demo
 
 
